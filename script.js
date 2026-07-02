@@ -13,14 +13,6 @@ function getComputerChoice(){
     return string;
 }
 
-
-function getHumanChoice(){
-    const input = prompt("What is your choice (rock, paper, or scissor)?");
-    return input.toLowerCase();
-}
-
-// console.log(humanChoice);
-
 let humanScore = 0;
 let computerScore = 0;
 
@@ -71,31 +63,59 @@ function playRound(humanChoice, computerChoice){
     }
 }
 
-function playGame(){
-    humanScore = 0;
-    computerScore = 0;
+let rock = document.querySelector('#rock');
+let paper = document.querySelector('#paper');
+let scissor = document.querySelector('#scissor');
 
-    for(let i = 0; i < 5; i++){
-        console.log(`--- Round ${i + 1} ---`);
-        const humanSelection = getHumanChoice();
-        const computerSelection = getComputerChoice();
-        
-        playRound(humanSelection, computerSelection);
+rock.addEventListener('click', () =>{
+    playGame('rock')
+})
+
+paper.addEventListener('click', () =>{
+    playGame('paper');
+})
+
+scissor.addEventListener('click', () =>{
+    playGame('scissor');
+})
+
+
+function playGame(humanChoice){
+    if (humanScore >= 5 || computerScore >= 5) {
+        return;
     }
 
-    let winner = "";
+    playRound(humanChoice, getComputerChoice());
 
-    if(humanScore > computerScore){
-        winner = "human"; 
-    }else if(humanScore < computerScore){
-        winner = "computer";
-    }else {
-        winner = "tie";
+    document.querySelector('.playerScore').textContent = humanScore;
+    document.querySelector('.computerScore').textContent = computerScore;
+    
+    if(humanScore >= 5 || computerScore >= 5){
+        let winner = "";
+
+        if(humanScore > computerScore){
+            winner = "human"; 
+        }else if(humanScore < computerScore){
+            winner = "computer";
+        }else {
+            winner = "tie";
+        }
+
+        let winnerDiv = document.querySelector('.winner');
+        winnerDiv.textContent = winner;
+        let btn = document.createElement('button');
+
+        btn.textContent = "replay";
+
+        winnerDiv.appendChild(btn);
+
+        btn.addEventListener('click', () => {
+            humanScore = 0;
+            computerScore = 0;
+            document.querySelector('.playerScore').textContent = humanScore;
+            document.querySelector('.computerScore').textContent = computerScore;
+            winnerDiv.textContent = ""; // Clears the winner text and the replay button
+        })
     }
 
-    console.log("=== GAME OVER ===");
-    console.log(`Final Score -> You: ${humanScore} | Computer: ${computerScore}`);
-    console.log(`The winner is: ${winner}!`);
 }
-
-playGame();
